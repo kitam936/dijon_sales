@@ -53,6 +53,7 @@ class AnalysisController extends Controller
         $shops = Shop::Where('company_id','LIKE','%'.$request->co_id.'%')
         ->where('id','>',1000)
         ->where('id','<',7000)
+        ->where('area_id','LIKE','%'.$request->area_id.'%')
         ->get();
 
         $areas = DB::table('areas')
@@ -95,7 +96,7 @@ class AnalysisController extends Controller
         if($request->type2 == ''){
             // 初回アクセス時には最大月を表示する
             $subQuery = SalesData::where('YM','>=', $max_YM)
-            ->where('YM','<=', $max_YM);
+            ->where('YM','<=',$max_YM);
 
             $prev_subQuery = SalesData::where('YM','>=', $max_YM-100)
             ->where('YM','<=', $max_YM-100);
@@ -103,13 +104,14 @@ class AnalysisController extends Controller
             $query = $subQuery
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('shop_id','LIKE','%'.$request->sh_id.'%')
             ->where('company_id','LIKE','%'.$request->co_id.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
-            ->groupBy('shop_id','YMD')
+            ->groupBy('shop_id','YW')
             ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase,
-            YMD as date');
+            YW as date');
         // dd($query);
             $datas = DB::table($query)
             ->groupBy('date')
@@ -121,28 +123,30 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
-            ->groupBy('shop_id', 'YMD')
-            ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase, YMD');
+            ->groupBy('shop_id', 'YW')
+            ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase, YW');
 
             $prev_datas = DB::table($query2)
             // $prev_datas = $query2
-            ->groupBy('YMD')
-            ->selectRaw('YMD as prev_date, sum(totalPerPurchase) as prev_total');
+            ->groupBy('YW')
+            ->selectRaw('YW as prev_date, sum(totalPerPurchase) as prev_total');
             // ->orderBy('prev_date', 'desc')
             // ->get();
 
-            $merged_data = DB::table('ymds')
-            ->where('ymds.YMD','<=',$max_YMD)
-            ->leftjoinSub($datas, 'cr_data', 'ymds.YMD', '=', 'cr_data.date')
-            ->leftjoinSub($prev_datas, 'pv_data', 'ymds.prev_YMD', '=', 'pv_data.prev_date')
-            ->select('ymds.YMD as date','ymds.prev_YMD','cr_data.total','pv_data.prev_total')
+            $merged_data = DB::table('yws')
+            ->where('yws.YW','<=',$max_YW)
+            ->leftjoinSub($datas, 'cr_data', 'yws.YW', '=', 'cr_data.date')
+            ->leftjoinSub($prev_datas, 'pv_data', 'yws.prev_YW', '=', 'pv_data.prev_date')
+            ->select('yws.YW as date','yws.prev_YW','cr_data.total','pv_data.prev_total')
             ->where('cr_data.total','>',0)
             ->orWhere('pv_data.prev_total','>',0)
-            ->orderBy('ymds.YMD','desc')
+            ->orderBy('yws.YW','desc')
             ->get();
+
 
 
             $total = DB::table($query)
@@ -153,7 +157,7 @@ class AnalysisController extends Controller
             ->selectRaw('sum(totalPerPurchase) as total')
             ->first();
 
-            // dd($merged_data,$total);
+            // dd($total);
             return view('analysis.sales_transition',
              compact('YMs','max_YM','companies','shops','areas',
                 'brands','datas','merged_data','total', 'seasons','pv_total','units','faces'
@@ -171,6 +175,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id','LIKE','%'.$request->sh_id.'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id','LIKE','%'.$request->co_id.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
@@ -188,6 +193,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -239,6 +245,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id','LIKE','%'.$request->sh_id.'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id','LIKE','%'.$request->co_id.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
@@ -256,6 +263,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -307,6 +315,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -332,6 +341,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -388,6 +398,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -413,6 +424,7 @@ class AnalysisController extends Controller
             ->where('unit_id','LIKE','%'.$request->unit_id.'%')
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('shop_id', 'LIKE', '%' . $request->sh_id . '%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->where('company_id', 'LIKE', '%' . $request->co_id . '%')
             ->where('brand_id', 'LIKE', '%' . ($request->brand_code) . '%')
             ->where('season_id', 'LIKE', '%' . ($request->season_code) . '%')
@@ -523,57 +535,58 @@ class AnalysisController extends Controller
 
         // 初回アクセス時には最大月を表示する
         $subQuery = SalesData::where('YM','>=', $max_YM)
-        ->where('YM','<=', $max_YM);
+            ->where('YM','<=',$max_YM);
 
-        $prev_subQuery = SalesData::where('YM','>=', $max_YM-100)
-        ->where('YM','<=', $max_YM-100);
+            $prev_subQuery = SalesData::where('YM','>=', $max_YM-100)
+            ->where('YM','<=', $max_YM-100);
 
-        $query = $subQuery
-        ->groupBy('shop_id','YMD')
-        ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase,
-        YMD as date');
-    // dd($query);
-        $datas = DB::table($query)
-        ->groupBy('date')
-        ->selectRaw('date, sum(totalPerPurchase) as total');
-        // ->orderBy('date','desc')
-        // ->get();
+            $query = $subQuery
+            ->groupBy('shop_id','YW')
+            ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase,
+            YW as date');
+        // dd($query);
+            $datas = DB::table($query)
+            ->groupBy('date')
+            ->selectRaw('date, sum(totalPerPurchase) as total');
+            // ->orderBy('date','desc')
+            // ->get();
 
-        $query2 = $prev_subQuery
-        ->groupBy('shop_id', 'YMD')
-        ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase, YMD');
+            $query2 = $prev_subQuery
+            ->groupBy('shop_id', 'YW')
+            ->selectRaw('shop_id, sum(kingaku) as totalPerPurchase, YW');
 
-        $prev_datas = DB::table($query2)
-        // $prev_datas = $query2
-        ->groupBy('YMD')
-        ->selectRaw('YMD as prev_date, sum(totalPerPurchase) as prev_total');
-        // ->orderBy('prev_date', 'desc')
-        // ->get();
+            $prev_datas = DB::table($query2)
+            // $prev_datas = $query2
+            ->groupBy('YW')
+            ->selectRaw('YW as prev_date, sum(totalPerPurchase) as prev_total');
+            // ->orderBy('prev_date', 'desc')
+            // ->get();
 
-        $merged_data = DB::table('ymds')
-        ->where('ymds.YMD','<=',$max_YMD)
-        ->leftjoinSub($datas, 'cr_data', 'ymds.YMD', '=', 'cr_data.date')
-        ->leftjoinSub($prev_datas, 'pv_data', 'ymds.prev_YMD', '=', 'pv_data.prev_date')
-        ->select('ymds.YMD as date','ymds.prev_YMD','cr_data.total','pv_data.prev_total')
-        ->where('cr_data.total','>',0)
-        ->orWhere('pv_data.prev_total','>',0)
-        ->orderBy('ymds.YMD','desc')
-        ->get();
+            $merged_data = DB::table('yws')
+            ->where('yws.YW','<=',$max_YW)
+            ->leftjoinSub($datas, 'cr_data', 'yws.YW', '=', 'cr_data.date')
+            ->leftjoinSub($prev_datas, 'pv_data', 'yws.prev_YW', '=', 'pv_data.prev_date')
+            ->select('yws.YW as date','yws.prev_YW','cr_data.total','pv_data.prev_total')
+            ->where('cr_data.total','>',0)
+            ->orWhere('pv_data.prev_total','>',0)
+            ->orderBy('yws.YW','desc')
+            ->get();
 
 
-        $total = DB::table($query)
-        ->selectRaw('sum(totalPerPurchase) as total')
-        ->first();
 
-        $pv_total = DB::table($query2)
-        ->selectRaw('sum(totalPerPurchase) as total')
-        ->first();
+            $total = DB::table($query)
+            ->selectRaw('sum(totalPerPurchase) as total')
+            ->first();
 
-        // dd($total);
-        return view('analysis.sales_transition',
-            compact('YMs','max_YM','companies','shops','areas',
-            'brands','datas','merged_data','total', 'seasons','pv_total','units','faces'
-        ));
+            $pv_total = DB::table($query2)
+            ->selectRaw('sum(totalPerPurchase) as total')
+            ->first();
+
+            // dd($total);
+            return view('analysis.sales_transition',
+             compact('YMs','max_YM','companies','shops','areas',
+                'brands','datas','merged_data','total', 'seasons','pv_total','units','faces'
+            ));
     }
 
     public function sales_total(Request $request)
@@ -650,6 +663,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('shop_id')
             ->selectRaw('shop_id,shop_name, sum(kingaku) as totalPerPurchase');
 
@@ -667,6 +681,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('shop_id')
             ->selectRaw('shop_id,shop_name, sum(kingaku) as totalPerPurchase');
 
@@ -678,6 +693,7 @@ class AnalysisController extends Controller
 
             $merged_data = DB::table('shops')
             ->where('shops.company_id','>',1000)
+            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'shops.id', '=', 'cr_data.shop_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'shops.id', '=', 'pv_data.shop_id')
             ->select('shops.id','shops.shop_name as name','cr_data.total','pv_data.pv_total')
@@ -697,7 +713,7 @@ class AnalysisController extends Controller
             // dd($shops,$merged_data);
             // dd($date_table,$datas,$prev_datas,$merged_data);
             // dd($shops,$datas,$prev_datas);
-            return view('analysis.sales_total', compact('YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
+            return view('analysis.sales_total', compact('areas','YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
         }
 
         if($request->type1 == 'co'){
@@ -712,6 +728,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('company_id')
             ->selectRaw('company_id,co_name, sum(kingaku) as totalPerPurchase');
 
@@ -726,6 +743,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('company_id')
             ->selectRaw('company_id,co_name, sum(kingaku) as totalPerPurchase');
 
@@ -737,6 +755,7 @@ class AnalysisController extends Controller
 
             $merged_data = DB::table('companies')
             ->where('companies.id','>',1000)
+            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'companies.id', '=', 'cr_data.company_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'companies.id', '=', 'pv_data.company_id')
             ->select('companies.id','companies.co_name as name','cr_data.total','pv_data.pv_total')
@@ -753,7 +772,7 @@ class AnalysisController extends Controller
 
 
             // dd($datas);
-            return view('analysis.sales_total',compact('YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
+            return view('analysis.sales_total',compact('areas','YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
         }
 
         if($request->type1 == 'sh'){
@@ -768,6 +787,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('shop_id')
             ->selectRaw('shop_id,shop_name, sum(kingaku) as totalPerPurchase');
 
@@ -784,6 +804,7 @@ class AnalysisController extends Controller
             ->where('face','LIKE','%'.$request->face.'%')
             ->where('brand_id','LIKE','%'.($request->brand_code).'%')
             ->where('season_id','LIKE','%'.($request->season_code).'%')
+            ->where('area_id','LIKE','%'.$request->area_id.'%')
             ->groupBy('shop_id')
             ->selectRaw('shop_id,shop_name, sum(kingaku) as totalPerPurchase');
 
@@ -795,6 +816,7 @@ class AnalysisController extends Controller
 
             $merged_data = DB::table('shops')
             ->where('shops.company_id','>',1000)
+            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'shops.id', '=', 'cr_data.shop_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'shops.id', '=', 'pv_data.shop_id')
             ->select('shops.id','shops.shop_name as name','cr_data.total','pv_data.pv_total')
@@ -814,7 +836,7 @@ class AnalysisController extends Controller
             // dd($shops,$merged_data);
             // dd($date_table,$datas,$prev_datas,$merged_data);
             // dd($shops,$datas,$prev_datas);
-            return view('analysis.sales_total', compact('YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
+            return view('analysis.sales_total', compact('areas','YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
         }
 
     }
@@ -923,7 +945,7 @@ class AnalysisController extends Controller
         // dd($shops,$merged_data);
         // dd($date_table,$datas,$prev_datas,$merged_data);
         // dd($shops,$datas,$prev_datas);
-        return view('analysis.sales_total', compact('YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
+        return view('analysis.sales_total', compact('areas','YMs','max_YM','YWs','max_YW','brands','datas','seasons','units','faces','total','pv_total','merged_data'));
 
     }
 

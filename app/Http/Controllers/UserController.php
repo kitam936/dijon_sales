@@ -26,14 +26,14 @@ class UserController extends Controller
         ->get();
         $users = DB::table('users')
         ->join('roles','roles.id','=','users.role_id')
-        ->join('shops','shops.id','=','users.shop_id')
+        ->leftjoin('shops','shops.id','=','users.shop_id')
         ->select('users.id','users.name','users.role_id','roles.role_name','users.user_info','shops.shop_name','users.mailService')
         ->where('users.user_info','LIKE','%'.($request->search).'%')
         ->orWhere('users.name','LIKE','%'.($request->search).'%')
         ->paginate(50);
         $login_user = User::findOrFail(Auth::id());
 
-                // dd($companies,$areas,$shops);
+                // dd($users);
 
         return view('user.index',compact('roles','users','login_user'));
         // dd($roles,$areas,$users);

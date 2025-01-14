@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="flex">
-                <div>
+                <div class="mr-4">
                 <label for="type1" class="mr-6 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">社店種別</label>
                 <select id="type1" name="type1" class="w-28 h-8 rounded text-sm pt-1 border mr-2 mb-2" type="text">
                     <option value="sh" @if(\Request::get('type1') == '0' || \Request::get('type1') == "sh") selected @endif >店別 </option>
@@ -64,6 +64,15 @@
                     {{-- <option value="sh" @if(\Request::get('type1') == "sh") selected @endif>店別</option> --}}
                     {{-- <option value="wet">wet</option> --}}
                 </select>
+                </div>
+                <div>
+                    <label for="area_id" class="mr-4 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">エリア指定</label>
+                    <select class="w-28 h-8 rounded text-sm pt-1 border mb-2 mr-1 " id="area_id" name="area_id" >
+                    <option value="" @if(\Request::get('area_id') == '0') selected @endif >選択なし</option>
+                    @foreach ($areas as $area)
+                        <option value="{{ $area->id }}" @if(\Request::get('area_id') == $area->id ) selected @endif >{{ $area->area_name  }}</option>
+                    @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -182,6 +191,10 @@ YW2.addEventListener('change', function(){
 this.form.submit()
 })
 
+const area = document.getElementById('area_id')
+area.addEventListener('change', function(){
+this.form.submit()
+})
 
 const brand = document.getElementById('brand_code')
 brand.addEventListener('change', function(){

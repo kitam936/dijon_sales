@@ -48,7 +48,7 @@
                 <select id="type3" name="type3" class="w-28 h-8 rounded text-sm pt-1 border mr-6 mb-2" type="text">
                     <option value="" @if(\Request::get('type3') == '0') selected @endif >品番(統合込)</option>
                     <option value="h" @if(\Request::get('type3') == "h") selected @endif>品番別</option>
-                    <option value="s" @if(\Request::get('type3') == "s") selected @endif>SKU別</option>
+                    {{-- <option value="s" @if(\Request::get('type3') == "s") selected @endif>SKU別</option> --}}
                 </select>
                 </div>
                 <div>

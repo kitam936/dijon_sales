@@ -25,10 +25,10 @@
             <label for="type" class="mr-5 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">表示選択</label>
             <select id="type" name="type" class="w-48 h-8 rounded text-sm pt-1 border mr-6 mb-2" type="text">
                 {{-- <option value="sku" @if(\Request::get('type') == '0') selected @endif >SKU</option> --}}
-                <option value="sku" @if(\Request::get('type') == "sku" || \Request::get('type') == "0") selected @endif >Col・Size・在庫</option>
-                <option value="h_trans" @if(\Request::get('type') == "h_trans") selected @endif>品番週売推移</option>
+                <option value="sh_total" @if(\Request::get('type') == "sh_total" || \Request::get('type') == "0") selected @endif >店別品番売上累計</option>
                 <option value="co_total" @if(\Request::get('type') == "co_total") selected @endif>社別品番売上累計</option>
-                <option value="sh_total" @if(\Request::get('type') == "sh_total") selected @endif>店別品番売上累計</option>
+                <option value="h_trans" @if(\Request::get('type') == "h_trans") selected @endif>品番週売推移</option>
+                {{-- <option value="sh_total" @if(\Request::get('type') == "sh_total") selected @endif>店別品番売上累計</option> --}}
                 {{-- <option value="h" @if(\Request::get('type') == "h") selected @endif>品番別</option> --}}
             </select>
             </div>
@@ -123,31 +123,26 @@
         <div class=" mx-auto sm:px-4 lg:px-4 border ">
 
 
-            <table class="md:w-full bg-white table-auto w-full text-center whitespace-no-wrap">
-               <thead>
-                    <tr>
-                        <th class="w-3/12 md:3/12 md:px-4  title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Id</th>
-                        <th class="w-3/12 md:3/12 md:px-4  title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">品番</th>
-                        <th class="w-2/12 md:2/12 md:px-4  title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Col</th>
-                        <th class="w-2/12 md:2/12 md:px-4  title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Size</th>
-                        <th class="w-2/12 md:2/12 md:px-4  title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫</th>
+            <table class="bg-white w-full md:w-2/3 text-center whitespace-no-wrap">
+                <thead >
+                <tr>
+                    <th class="w-3/9md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">店</th>
+                    <th class="w-3/9 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">売上数</th>
+                    <th class="w-3/9 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">売上額(千)</th>
 
-                    </tr>
+                </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($skus as $sku)
+                    @foreach ($datas as $data)
                     <tr>
-                        <td class="w-3/12 md:3/12 text-sm md:px-4  text-center"> <a href="{{ route('sku_stock',['sku'=>$sku->id]) }}" class="w-20 h-8 text-indigo-500 ml-2 "  >{{ $sku->id }} </td>
-                        <td class="w-3/12 md:3/12 text-sm md:px-4  text-center">{{ $sku->hinban_id }}</td>
-                        <td class="w-2/12 md:2/12 text-sm md:px-4  text-center">{{ $sku->col_id }}</td>
-                        <td class="w-2/12 md:2/12 text-xs md:px-4  text-center">{{ $sku->size_id }}</td>
-                        <td class="w-2/12 md:2/12 text-sm md:px-4  text-center">{{ $sku->pcs }}</a></td>
+                        <td class="w-3/9 md:px-4 py-1 text-sm">{{ $data->shop_name }}</td>
+                        <td class="w-3/9 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ ($data->pcs)}}</span></td>
+                        <td class="w-3/9 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ number_format(round($data->total)/1000)}}</span></td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-
 
 
     <script>

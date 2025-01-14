@@ -25,10 +25,10 @@
             <label for="type" class="mr-5 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">表示選択</label>
             <select id="type" name="type" class="w-48 h-8 rounded text-sm pt-1 border mr-6 mb-2" type="text">
                 {{-- <option value="sku" @if(\Request::get('type') == '0') selected @endif >SKU</option> --}}
-                <option value="sku" @if(\Request::get('type') == "sku" || \Request::get('type') == "0") selected @endif >Col・Size・在庫</option>
-                <option value="h_trans" @if(\Request::get('type') == "h_trans") selected @endif>品番週売推移</option>
+                <option value="sh_total" @if(\Request::get('type') == "sh_total" || \Request::get('type') == "0") selected @endif >店別品番売上累計</option>
                 <option value="co_total" @if(\Request::get('type') == "co_total") selected @endif>社別品番売上累計</option>
-                <option value="sh_total" @if(\Request::get('type') == "sh_total") selected @endif>店別品番売上累計</option>
+                <option value="h_trans" @if(\Request::get('type') == "h_trans") selected @endif>品番週売推移</option>
+                {{-- <option value="sh_total" @if(\Request::get('type') == "sh_total") selected @endif>店別品番売上累計</option> --}}
                 {{-- <option value="h" @if(\Request::get('type') == "h") selected @endif>品番別</option> --}}
             </select>
             </div>
