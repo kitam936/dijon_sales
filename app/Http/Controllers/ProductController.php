@@ -118,10 +118,10 @@ class ProductController extends Controller
     public function show0($id)
     {
         $product = DB::table('hinbans')
-        ->join('units','units.id','=','hinbans.unit_id')
-        ->where('hinbans.id',$id)
-        ->select(['hinbans.year_code','hinbans.brand_id','hinbans.unit_id','units.season_name','hinbans.id','hinbans.hinban_name','hinbans.hinban_info','hinbans.shohin_gun','hinbans.m_price','hinbans.price'])
-        ->first();
+            ->join('units','units.id','=','hinbans.unit_id')
+            ->where('hinbans.id',$id)
+            ->select(['hinbans.year_code','hinbans.brand_id','hinbans.unit_id','units.season_name','hinbans.id','hinbans.hinban_name','hinbans.hinban_info','hinbans.shohin_gun','hinbans.m_price','hinbans.price'])
+            ->first();
 
         $sku_stocks = DB::table('stocks')
         ->join('skus','skus.id','=','stocks.sku_id')
@@ -138,10 +138,19 @@ class ProductController extends Controller
         ->where('skus.col_id','<','99')
         ->select(['skus.id','skus.hinban_id','skus.col_id','skus.size_id','sku_stocks.pcs'])
         ->get();
+        $datas = DB::table('sales')
+        ->join('skus','skus.id','=','sales.sku_id')
+        ->join('shops','shops.id','=','sales.shop_id')
+        ->where('skus.hinban_id',$id)
+        ->select('sales.shop_id as shop_id','shops.shop_name as shop_name')
+        ->selectRaw('SUM(pcs) as pcs,SUM(kingaku) as total')
+        ->groupBy('shop_id','shop_name')
+        ->orderBy('pcs','desc')
+        ->get();
 
-        // dd($id,$product,$skus);
 
-        return view('product.show0',compact('product','skus'));
+
+        return view('product.show0',compact('product','skus','datas'));
     }
 
     public function show(Request $request, $id)

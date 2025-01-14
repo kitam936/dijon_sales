@@ -39,30 +39,40 @@
                 <span class="items-center text-sm mt-2" >　</span>
             </div>
             </div>
-            <div class="md:flex">
-            <div class="flex">
                 <div>
                 <label for="type2" class="mr-5 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">期間種別</label>
                 <select id="type2" name="type2" class="w-28 h-8 rounded text-sm pt-1 border mr-6 mb-2" type="text">
-                    <option value="d" @if(\Request::get('type2') == '0' || \Request::get('type2') == "d") selected @endif >日別</option>
+                    <option value="w" @if(\Request::get('type2') == '0' || \Request::get('type2') == "w") selected @endif >週別</option>
                     {{-- <option value="dry">dry</option> --}}
                     {{-- <option value="d" @if(\Request::get('type2') == "d") selected @endif>日別</option> --}}
-                    <option value="w" @if(\Request::get('type2') == "w") selected @endif>週別</option>
+                    {{-- <option value="w" @if(\Request::get('type2') == "w") selected @endif>週別</option> --}}
                     <option value="m" @if(\Request::get('type2') == "m") selected @endif>月別</option>
                     <option value="y" @if(\Request::get('type2') == "y") selected @endif>年度別</option>
                     {{-- <option value="wet">wet</option> --}}
                 </select>
-            </div>
-            <div>
-                <label for="type1" class="mr-4 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">社店種別</label>
-                <select id="type1" name="type1" class="w-28 h-8 rounded text-sm pt-1 border mr-2 mb-2" type="text">
-                    <option value="" @if(\Request::get('type1') == '0') selected @endif >全社店</option>
-                    {{-- <option value="dry">dry</option> --}}
-                    <option value="co" @if(\Request::get('type1') == "co") selected @endif>社別</option>
-                    <option value="sh" @if(\Request::get('type1') == "sh") selected @endif>店別</option>
-                    {{-- <option value="wet">wet</option> --}}
-                </select>
-            </div>
+                </div>
+            <div class="md:flex">
+            <div class="flex">
+                <div>
+                    <label for="type1" class="mr-5 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">社店種別</label>
+                    <select id="type1" name="type1" class="w-28 h-8 rounded text-sm pt-1 border mr-6 mb-2" type="text">
+                        <option value="" @if(\Request::get('type1') == '0') selected @endif >全社店</option>
+                        {{-- <option value="dry">dry</option> --}}
+                        <option value="co" @if(\Request::get('type1') == "co") selected @endif>社別</option>
+                        <option value="sh" @if(\Request::get('type1') == "sh") selected @endif>店別</option>
+                        {{-- <option value="wet">wet</option> --}}
+                    </select>
+                </div>
+                <div>
+                    <label for="area_id" class="mr-4 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">エリア指定</label>
+                    <select class="w-28 h-8 rounded text-sm pt-1 border mb-2 mr-1 " id="area_id" name="area_id" >
+                    <option value="" @if(\Request::get('area_id') == '0') selected @endif >選択なし</option>
+                    @foreach ($areas as $area)
+                        <option value="{{ $area->id }}" @if(\Request::get('area_id') == $area->id ) selected @endif >{{ $area->area_name  }}</option>
+                    @endforeach
+                    </select>
+                </div>
+
             </div>
 
 
@@ -163,7 +173,7 @@
             <table class="mx-auto table-auto bg-white w-full text-center whitespace-no-wrap">
                 <thead >
                 <tr>
-                    <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">年度・月・週・日</th>
+                    <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">年度・月・週</th>
                     <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">当期売上(千)</th>
                     <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">前期売上(千)</th>
                     <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">前期比</th>
@@ -229,6 +239,11 @@ this.form.submit()
 
 const face = document.getElementById('face')
 face.addEventListener('change', function(){
+this.form.submit()
+})
+
+const area = document.getElementById('area_id')
+area.addEventListener('change', function(){
 this.form.submit()
 })
 
