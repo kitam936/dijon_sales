@@ -53,7 +53,7 @@ class ReportController extends Controller
         ->where('shops.shop_name','LIKE','%'.($request->sh_name).'%')
         ->groupBy('reports.id','shops.company_id','companies.co_name','reports.shop_id','shops.shop_name','areas.area_name','shops.shop_info','reports.report','reports.image1','reports.created_at','reports.updated_at')
         ->selectRaw('reports.id,shops.company_id,companies.co_name,reports.shop_id,shops.shop_name,areas.area_name,shops.shop_info,reports.report,reports.image1,reports.created_at,reports.updated_at,count(comments.id) as comment_count')
-        ->orderBy('reports.updated_at','desc')
+        ->orderBy('reports.created_at','desc')
         ->paginate(100);
 
 

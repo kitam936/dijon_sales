@@ -31,8 +31,8 @@
                                     </div>
                                     <div>
                                         <select class="w-80 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" id="sh_id" name="sh_id"  class="border">
-                                            <option value="" @if(\Request::get('sh_id') == '0') selected @endif >{{ $user->shop_name }}</option>
-                                            <option value="{{ $user->shop_id }}" @if(\Request::get('sh_id') == '0') selected @endif ></option>
+                                            <option value="{{ $user->shop_id }}" @if(\Request::get('sh_id') == '0') selected @endif >{{ $user->shop_name }}</option>
+                                            {{-- <option value="{{ $user->shop_id }}" @if(\Request::get('sh_id') == '0') selected @endif ></option> --}}
                                             @foreach ($shops as $shop)
                                                 <option value="{{ $shop->id }}" @if(\Request::get('sh_id') == $shop->id) selected @endif >{{ $shop->shop_name }}</option>
                                             @endforeach
@@ -66,7 +66,7 @@
 
                         <div class="p-2 w-1/2 mx-auto flex">
                         <div class="p-2 w-full mt-2 flex justify-around">
-                            <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新</button>
+                            <button type="submit" class="w-32 h-8 text-center text-sm text-white bg-green-500 border-0 py-1 px-2 focus:outline-none hover:bg-green-600 rounded ">更新</button>
                         </div>
                         </div>
                     </div>

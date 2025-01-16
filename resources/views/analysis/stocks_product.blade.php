@@ -113,7 +113,7 @@
         </form>
 
 
-        <div class="ml-0 mt-3 py-0 md:w-1/2 border">
+        <div class="ml-0 mt-3 py-0 md:w-2/3 border">
             <div class=" w-full  sm:px-0 lg:px-0 border mt-0 ml-0">
                 <div class='pl-2 border bg-gray-100 h-6 text-sm'>
 
@@ -129,7 +129,7 @@
     </x-slot>
 
         <div class="py-6 border">
-        <div class="md:w-1/2 sm:px-4 lg:px-4 border">
+        <div class="md:w-2/3 sm:px-4 lg:px-4 border">
             <table class="mx-auto table-auto bg-white w-full text-center whitespace-no-wrap">
                 <thead >
                 <tr>
@@ -160,6 +160,16 @@
                 @endforeach
                 </tbody>
             </table>
+            {{  $datas->appends([
+                'type1'=>\Request::get('type1'),
+                'type3'=>\Request::get('type3'),
+                'co_id'=>\Request::get('co_id'),
+                'sh_id'=>\Request::get('sh_id'),
+                'brand_code'=>\Request::get('brand_code'),
+                'season_code_id'=>\Request::get('season_code_id'),
+                'unit_id'=>\Request::get('unit_id'),
+                'face'=>\Request::get('face'),
+            ])->links()}}
         </div>
         </div>
 

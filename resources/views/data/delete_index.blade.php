@@ -30,24 +30,29 @@
                                 @csrf
                                 @method('delete')
                                 <div class="flex">
+                                    <div class="flex">
+                                        <div class="flex">
+                                        {{-- <label for="YM1" class="mr-3 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">期間(年月)</label> --}}
+                                        <select class="w-32 h-8 rounded text-sm pt-1" id="YM1" name="YM1" type="number" class="border">
+                                            <option value="{{ $max_YM }}" @if(\Request::get('YM1') == '0') selected @endif >年月選択(from)</option>
+                                            @foreach ($YMs as $YM)
+                                                <option value="{{ $YM->YM }}" @if(\Request::get('YM1') == $YM->YM) selected @endif >{{ floor(($YM->YM)/100)%100 }}年{{ ($YM->YM)%100 }}月</option>
+                                            @endforeach
+                                        </select>
+                                        </div>
+                                        <div>
+                                        <span class="items-center text-sm mt-2 text-gray-800 dark:text-gray-200 leading-tight" >　～　</span>
+                                        <select class="ml-1 w-32 h-8 rounded text-sm pt-1" id="YM2" name="YM2" type="number" class="border">
+                                            <option value="{{ $max_YM }}" @if(\Request::get('YM2') == '0') selected @endif >年月選択(to)</option>
+                                            @foreach ($YMs as $YM)
+                                                <option value="{{ $YM->YM }}" @if(\Request::get('YM2') == $YM->YM) selected @endif >{{ floor(($YM->YM)/100)%100 }}年{{ ($YM->YM)%100 }}月</option>
+                                            @endforeach
+                                        </select>
+                                        </div>
+                                    <span class="items-center text-sm mt-2" >　　　</span><br>
+                                    </div>
                                 <div>
-                                    <select class="w-32 h-8 text-sm rounded items-center pt-1" id="year1" name="year1" type="number" class="border">
-                                        <option value="" @if(\Request::get('year1') == '0') selected @endif >年度選択(from)</option>
-                                        @foreach ($years as $year)
-                                            <option value="{{ $year->year_code }}" @if(\Request::get('year1') == $year->year_code) selected @endif >{{ $year->year_code }}年度</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="items-center text-sm mt-2" >　～　</span>
-                                    <select class="w-32 h-8 text-sm rounded items-center pt-1" id="year2" name="year2" type="number" class="border">
-                                        <option value="" @if(\Request::get('year2') == '0') selected @endif >年度選択(to)</option>
-                                        @foreach ($years as $year)
-                                            <option value="{{ $year->year_code }}" @if(\Request::get('year2') == $year->year_code) selected @endif >{{ $year->year_code }}年度</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="items-center text-sm mt-2" >　　</span><br>
-                                </div>
-                                <div>
-                                <button type="submit" class="text-sm ml-0 mt-0 text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded">売上データ削除</button>
+                                <button type="submit" class="w-32 text-sm ml-0 mt-0 text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded">売上データ削除</button>
                                 </div>
                                 </div>
                             </form>
@@ -74,7 +79,7 @@
                                     <span class="items-center text-sm mt-2" >　　</span><br>
                                     </div>
                                     <div>
-                                    <button type="submit" class="text-sm w-32 text-white bg-red-500 border-0 py-1 focus:outline-none hover:bg-red-600 rounded">品番データ削除</button>
+                                    <button type="submit" class="text-sm ml-2 w-32 text-white bg-red-500 border-0 py-1 focus:outline-none hover:bg-red-600 rounded">品番データ削除</button>
                                     </div>
                                     </div>
                             </form>
