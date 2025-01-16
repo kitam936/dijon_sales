@@ -56,7 +56,7 @@
 
                         <div class="p-2 w-1/2 mx-auto flex">
                         <div class="p-2 w-full mt-2 flex justify-around">
-                            <button type="submit" class="text-white h-8 w-32 bg-green-500 border-0 py-0 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">更新</button>
+                            <button type="submit" class="text-white text-sm h-8 w-32 bg-green-500 border-0 py-0 px-8 focus:outline-none hover:bg-green-600 rounded ">更新</button>
                         </div>
 
                         </div>

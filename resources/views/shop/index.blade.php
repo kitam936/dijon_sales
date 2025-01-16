@@ -4,9 +4,9 @@
         <h2 class="font-semibold mb-2 text-xl text-gray-800 dark:text-gray-200 leading-tight">
             SHOP一覧
         </h2>
-        <div class="ml-2 flex md:ml-8">
+        <div class="ml-2 mt-4 md:mt-2 flex md:ml-16">
 
-            <div class="ml-2 mb-2 md:mb-0">
+            <div class="ml-0 mb-2 md:mb-0">
                 <button type="button" onclick="location.href='{{ route('report_list') }}'" class="w-32 text-center text-sm text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-700 rounded ">店舗Report一覧</button>
             </div>
 
@@ -58,20 +58,20 @@
             <table class="md:w-full bg-white table-auto w-full text-center whitespace-no-wrap">
                <thead>
                     <tr>
-                        <th class="w-2/12 md:1/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">エリア</th>
-                        <th class="w-3/12 md:2/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">社名</th>
-                        <th class="w-3/12 md:2/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">店名</th>
-                        <th class="w-2/12 md:5/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">info</th>
+                        <th class="w-2/12 md:2/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">エリア</th>
+                        <th class="w-3/12 md:3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">社名</th>
+                        <th class="w-3/12 md:3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">店名</th>
+                        <th class="w-4/12 md:4/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">info</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @foreach ($shops as $shop)
                     <tr>
-                        <td class="w-2/12 md:1/12 text-sm md:px-4 py-1 text-left"> {{ $shop->area_name }} </td>
-                        <td class="w-3/12 md:2/12 text-sm md:px-4 py-1 text-left">{{ Str::limit($shop->co_name,10) }}</td>
-                        <td class="w-3/12 md:2/12 text-sm md:px-4 py-1 text-left"><a href="{{ route('shop_show',['shop'=>$shop->id]) }}" class="w-20 h-8 text-indigo-500 ml-2 "  >{{ Str::limit($shop->shop_name,20) }}</a></td>
-                        <td class="w-2/12 md:5/12 text-xs md:px-4 py-1 text-left">{{ Str::limit($shop->shop_info,28) }}</td>
+                        <td class="w-2/12 md:2/12 text-sm md:px-4 py-1 text-left"> {{ $shop->area_name }} </td>
+                        <td class="w-3/12 md:3/12 text-sm md:px-4 py-1 text-left">{{ Str::limit($shop->co_name,16) }}</td>
+                        <td class="w-3/12 md:3/12 text-sm md:px-4 py-1 text-left"><a href="{{ route('shop_show',['shop'=>$shop->id]) }}" class="w-20 h-8 text-indigo-500 ml-2 "  >{{ Str::limit($shop->shop_name,20) }}</a></td>
+                        <td class="w-4/12 md:4/12 text-xs md:px-4 py-1 text-left">{{ Str::limit($shop->shop_info,24) }}</td>
 
                     </tr>
                     @endforeach

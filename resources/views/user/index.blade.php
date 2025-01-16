@@ -40,7 +40,7 @@
 
     <div class="py-0 border">
         <div class=" sm:px-4 lg:px-4 border ">
-            <table class="md:w-full bg-white table-auto w-full text-center whitespace-no-wrap">
+            <table class="md:w-2/3 bg-white table-auto w-full text-center whitespace-no-wrap">
                 <thead>
                     <tr>
                         <th class="w-1/10 md:1/10 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Id</th>

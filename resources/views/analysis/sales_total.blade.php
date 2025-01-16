@@ -126,11 +126,11 @@
         </div> --}}
         </form>
 
-        <div class="mt-3 py-0 md:w-1/2 border">
+        <div class="mt-3 py-0 md:w-2/3 border">
             <div class=" w-full  sm:px-0 lg:px-0 border mt-0 ml-0">
                 <div class='pl-2 border bg-gray-100 h-6 text-sm'>
-                    当期累計：{{ number_format(round($total->total)/1000) }}千円　
-                    前期累計：{{ number_format(round($pv_total->total)/1000)}}千円　
+                    当期累計：{{ number_format(round($total->total)/1000) }}千円　　
+                    前期累計：{{ number_format(round($pv_total->total)/1000)}}千円　　
                     @if($pv_total->total>0)
                     前期比：{{ number_format(($total->total/$pv_total->total)*100)}}％
                     @endif
@@ -142,33 +142,43 @@
     </x-slot>
 
         <div class="py-6 border">
-        <div class="md:w-1/2 sm:px-4 lg:px-4 border">
+        <div class="md:w-2/3 sm:px-4 lg:px-4 border">
             <table class="mx-auto table-auto bg-white w-full text-center whitespace-no-wrap">
                 <thead >
                 <tr>
-                    <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Name</th>
+                    <th class="w-4/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Name</th>
                     <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">当期売上(千)</th>
                     <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">前期売上(千)</th>
-                    <th class="w-3/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">前期比(%)</th>
+                    <th class="w-2/12 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">前期比(%)</th>
                 </tr>
                 </thead>
 
                 <tbody>
                     @foreach ($merged_data as $data)
                 <tr>
-                    <td class="w-3/12 md:px-4 py-1 text-sm">{{ $data->name }}</td>
+                    <td class="w-4/12 md:px-4 py-1 text-sm text-left">{{ $data->name }}</td>
 
                     <td class="w-3/12 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ number_format(round($data->total)/1000)}}</span></td>
                     <td class="w-3/12 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ number_format(round($data->pv_total)/1000)}}</span></td>
                     @if($data->pv_total>0)
-                    <td class="w-3/12 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ number_format(($data->total/$data->pv_total)*100)}}</span></td>
+                    <td class="w-2/12 pr-8 md:px-4 py-1 text-sm text-right"><span style="font-variant-numeric:tabular-nums"> {{ number_format(($data->total/$data->pv_total)*100)}}</span></td>
                     @else
-                    <td class="w-3/12 pr-8 md:px-4 py-1 text-right"><span style="font-variant-numeric:tabular-nums"> --</span></td>
+                    <td class="w-2/12 pr-8 md:px-4 py-1 text-right"><span style="font-variant-numeric:tabular-nums"> --</span></td>
                     @endif
                 </tr>
                 @endforeach
                 </tbody>
             </table>
+            {{  $merged_data->appends([
+                'YW1'=>\Request::get('YW1'),
+                'YW2'=>\Request::get('YW2'),
+                'type1'=>\Request::get('type1'),
+                'ar_id'=>\Request::get('ar_id'),
+                'brand_code'=>\Request::get('brand_code'),
+                'season_code_id'=>\Request::get('season_code_id'),
+                'unit_id'=>\Request::get('unit_id'),
+                'face'=>\Request::get('face'),
+            ])->links()}}
         </div>
         </div>
 

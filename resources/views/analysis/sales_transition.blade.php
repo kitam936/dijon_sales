@@ -64,7 +64,7 @@
                     </select>
                 </div>
                 <div>
-                    <label for="area_id" class="mr-4 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">エリア指定</label>
+                    <label for="area_id" class="mr-3 leading-7 text-sm  text-gray-800 dark:text-gray-200 ">エリア指定</label>
                     <select class="w-28 h-8 rounded text-sm pt-1 border mb-2 mr-1 " id="area_id" name="area_id" >
                     <option value="" @if(\Request::get('area_id') == '0') selected @endif >選択なし</option>
                     @foreach ($areas as $area)
@@ -153,11 +153,11 @@
 
 
 
-        <div class="ml-0 mt-3 py-0 md:w-1/2 border">
+        <div class="ml-0 mt-3 py-0 md:w-2/3 border">
             <div class=" w-full  sm:px-0 lg:px-0 border mt-0 ml-0">
                 <div class='pl-2 border bg-gray-100 h-6 text-sm'>
-                    当期累計：{{ number_format(round($total->total)/1000) }}千円　
-                    前期累計：{{ number_format(round($pv_total->total)/1000)}}千円　
+                    当期累計：{{ number_format(round($total->total)/1000) }}千円　　
+                    前期累計：{{ number_format(round($pv_total->total)/1000)}}千円　　
                     @if($pv_total->total>0)
                     前期比：{{ number_format(($total->total/$pv_total->total)*100)}}％
                     @endif
@@ -169,7 +169,7 @@
     </x-slot>
 
         <div class="py-6 border">
-        <div class="md:w-1/2 sm:px-4 lg:px-4 border">
+        <div class="md:w-2/3 sm:px-4 lg:px-4 border">
             <table class="mx-auto table-auto bg-white w-full text-center whitespace-no-wrap">
                 <thead >
                 <tr>

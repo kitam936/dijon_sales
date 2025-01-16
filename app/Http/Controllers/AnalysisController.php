@@ -692,13 +692,16 @@ class AnalysisController extends Controller
             // ->get();
 
             $merged_data = DB::table('shops')
+            ->join('companies','companies.id','shops.company_id')
             ->where('shops.company_id','>',1000)
-            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
+            // ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'shops.id', '=', 'cr_data.shop_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'shops.id', '=', 'pv_data.shop_id')
-            ->select('shops.id','shops.shop_name as name','cr_data.total','pv_data.pv_total')
+            ->selectRaw('shops.id,CONCAT(companies.co_name, "---", shops.shop_name) as name,cr_data.total,pv_data.pv_total')
+            ->where('cr_data.total','>',0)
+            ->orWhere('pv_data.pv_total','>',0)
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             // dd($YM,$datas,$prev_datas);
         // 比較データを作成
@@ -755,12 +758,14 @@ class AnalysisController extends Controller
 
             $merged_data = DB::table('companies')
             ->where('companies.id','>',1000)
-            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
+            // ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'companies.id', '=', 'cr_data.company_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'companies.id', '=', 'pv_data.company_id')
             ->select('companies.id','companies.co_name as name','cr_data.total','pv_data.pv_total')
+            ->where('cr_data.total','>',0)
+            ->orWhere('pv_data.pv_total','>',0)
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(totalPerPurchase) as total')
@@ -815,13 +820,16 @@ class AnalysisController extends Controller
             // ->get();
 
             $merged_data = DB::table('shops')
+            ->join('companies','companies.id','shops.company_id')
             ->where('shops.company_id','>',1000)
-            ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
+            // ->where('shops.area_id','LIKE','%'.$request->area_id.'%')
             ->leftjoinSub($datas, 'cr_data', 'shops.id', '=', 'cr_data.shop_id')
             ->leftjoinSub($prev_datas, 'pv_data', 'shops.id', '=', 'pv_data.shop_id')
-            ->select('shops.id','shops.shop_name as name','cr_data.total','pv_data.pv_total')
+            ->selectRaw('shops.id,CONCAT(companies.co_name, "---", shops.shop_name) as name,cr_data.total,pv_data.pv_total')
+            ->where('cr_data.total','>',0)
+            ->orWhere('pv_data.pv_total','>',0)
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             // dd($YM,$datas,$prev_datas);
         // 比較データを作成
@@ -925,12 +933,13 @@ class AnalysisController extends Controller
         // ->get();
 
         $merged_data = DB::table('shops')
+        ->join('companies','companies.id','shops.company_id')
         ->where('shops.company_id','>',1000)
         ->leftjoinSub($datas, 'cr_data', 'shops.id', '=', 'cr_data.shop_id')
         ->leftjoinSub($prev_datas, 'pv_data', 'shops.id', '=', 'pv_data.shop_id')
-        ->select('shops.id','shops.shop_name as name','cr_data.total','pv_data.pv_total')
+        ->selectRaw('shops.id,CONCAT(companies.co_name, "---", shops.shop_name) as name,cr_data.total,pv_data.pv_total')
         ->orderBy('total','desc')
-        ->get();
+        ->paginate(50);
 
         // dd($YM,$datas,$prev_datas);
     // 比較データを作成
@@ -1021,7 +1030,7 @@ class AnalysisController extends Controller
             ->groupBy('hinban_id','hinban_name','m_price')
             ->selectRaw('hinban_id, hinban_id as code,hinban_name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
             ->orderBy('pcs_total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
@@ -1054,7 +1063,7 @@ class AnalysisController extends Controller
             ->selectRaw('hinban_id, hinban_id as code,hinban_name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
@@ -1089,7 +1098,7 @@ class AnalysisController extends Controller
             ->selectRaw('sku_id,hinban_id, CONCAT(hinban_id, "-", col_id, "-", size_id) as code,hinban_name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             // ->selectRaw("CONCAT(first_name, ' ', last_name) AS full_name")
 
@@ -1168,7 +1177,7 @@ class AnalysisController extends Controller
         ->groupBy('hinban_id','hinban_name','m_price')
         ->selectRaw('hinban_id, hinban_id as code,hinban_name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
         ->orderBy('pcs_total','desc')
-        ->get();
+        ->paginate(50);
 
         $total = DB::table($query)
         ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerPurchase) as total')
@@ -1239,7 +1248,7 @@ class AnalysisController extends Controller
             ->groupBy('hinban_id','hinban_name','m_price')
             ->selectRaw('hinban_id, hinban_id as code,hinban_name as name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
             ->orderBy('pcs_total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
@@ -1272,7 +1281,7 @@ class AnalysisController extends Controller
             ->selectRaw('hinban_id, hinban_id as code,hinban_name as name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
@@ -1305,7 +1314,7 @@ class AnalysisController extends Controller
             ->selectRaw('season_id, season_id as code,season_name as name, sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
@@ -1338,7 +1347,7 @@ class AnalysisController extends Controller
             ->selectRaw('unit_id, unit_id as code,season_name as name, sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
@@ -1371,7 +1380,7 @@ class AnalysisController extends Controller
             ->selectRaw('face, face as code,face as name, sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
             ->orderBy('pcs_total','desc')
             ->orderBy('total','desc')
-            ->get();
+            ->paginate(50);
 
             $total = DB::table($query)
             ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
@@ -1431,7 +1440,7 @@ class AnalysisController extends Controller
         ->groupBy('hinban_id','hinban_name','m_price')
         ->selectRaw('hinban_id, hinban_id as code,hinban_name as name, m_price,sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
         ->orderBy('pcs_total','desc')
-        ->get();
+        ->paginate(50);
 
         $total = DB::table($query)
         ->selectRaw('sum(subtotal_pcs) as pcs_total,sum(totalPerZaiko) as total')
