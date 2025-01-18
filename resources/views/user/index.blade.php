@@ -5,6 +5,13 @@
 
         </h2>
 
+        <div class="flex">
+            <div class="mt-2 ml-2 ">
+                <button type="button" class="w-32 text-center text-sm text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-700 rounded " onclick="location.href='{{ route('analysis_index') }}'" >Menu</button>
+            </div>
+
+        </div>
+
 
         <form method="get" action="{{ route('memberlist')}}" class="mt-4">
             <x-flash-message status="session('status')"/>
@@ -20,7 +27,7 @@
                 </div>
                 </div>
             <div class="flex">
-                @can('manager-higher')
+                @can('admin')
                 <div class="ml-2">
                     <button type="button" class="w-32 h-8 text-sm  bg-indigo-500 text-white ml-0 hover:bg-indigo-600 rounded" onclick="location.href='{{ route('role_list') }}'" >権限</button>
                 </div>
